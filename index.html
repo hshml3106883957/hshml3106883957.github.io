@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#fa6f5c">
+<meta name="description" content="Crimson_Fox（赤焰狐）的个人网站、世界观与角色档案">
+<title>Crimson_Fox · 赤焰狐</title>
+<link rel="icon" type="image/png" href="Crimson_Fox_ico.png">
+
+<style>
+:root{
+  --red:#fa6f5c;
+  --orange:#ff9a00;
+  --green:#8ede89;
+  --cyan:#00c4ff;
+  --bg:#070a10;
+  --bg2:#0d111b;
+  --card:rgba(17,22,33,.76);
+  --card2:rgba(255,255,255,.045);
+  --text:#f6f8fb;
+  --muted:#a8b0bf;
+  --line:rgba(255,255,255,.10);
+  --shadow:0 24px 70px rgba(0,0,0,.28);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  min-height:100vh;
+  color:var(--text);
+  font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif;
+  background:
+    radial-gradient(circle at 8% 12%,rgba(250,111,92,.18),transparent 28%),
+    radial-gradient(circle at 90% 18%,rgba(0,196,255,.14),transparent 28%),
+    radial-gradient(circle at 45% 82%,rgba(142,222,137,.09),transparent 30%),
+    linear-gradient(180deg,#070a10,#0a0e16 45%,#070a10);
+  overflow-x:hidden;
+}
+body:before{
+  content:"";
+  position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background-image:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:42px 42px;
+  mask-image:linear-gradient(to bottom,black,transparent 90%);
+}
+a{text-decoration:none;color:inherit}
+button{font:inherit}
+
+.nav{
+  position:fixed;z-index:100;top:16px;left:50%;
+  transform:translateX(-50%);
+  width:min(1160px,calc(100% - 28px));
+  padding:11px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  border:1px solid var(--line);border-radius:20px;
+  background:rgba(8,11,17,.72);
+  backdrop-filter:blur(20px);
+  box-shadow:0 12px 45px rgba(0,0,0,.25);
+}
+.brand{display:flex;align-items:center;gap:10px;font-weight:850}
+.brand img{width:40px;height:40px;border-radius:13px;object-fit:cover}
+.brand-name{
+  background:linear-gradient(90deg,var(--red),var(--orange),var(--cyan));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.nav-links{display:flex;gap:4px}
+.nav-links a{
+  padding:9px 12px;border-radius:12px;color:#c5ccd7;font-size:14px;
+  transition:.25s;
+}
+.nav-links a:hover{background:rgba(255,255,255,.07);color:#fff}
+
+.hero{
+  min-height:100vh;width:min(1160px,calc(100% - 28px));
+  margin:auto;display:grid;place-items:center;text-align:center;
+  padding:120px 0 70px;
+}
+.hero-inner{animation:rise .9s ease both}
+.avatar{
+  width:126px;height:126px;margin:0 auto 28px;padding:4px;
+  border-radius:36px;
+  background:linear-gradient(135deg,var(--red),var(--orange),var(--green),var(--cyan));
+  box-shadow:0 0 70px rgba(250,111,92,.23);
+  animation:float 5s ease-in-out infinite;
+}
+.avatar img{width:100%;height:100%;object-fit:cover;border-radius:32px;background:#111}
+.eyebrow{
+  color:var(--orange);font-size:13px;font-weight:800;letter-spacing:4px;
+  margin-bottom:16px;
+}
+h1{
+  font-size:clamp(52px,9vw,102px);line-height:.94;
+  letter-spacing:-5px;margin-bottom:22px;
+  background:linear-gradient(90deg,#fff 5%,var(--red),var(--orange),var(--cyan));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero p{
+  max-width:760px;margin:auto;color:var(--muted);
+  font-size:clamp(16px,2vw,20px);line-height:1.9;
+}
+.actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:32px}
+.btn{
+  padding:13px 20px;border:1px solid var(--line);border-radius:14px;
+  background:rgba(255,255,255,.055);font-weight:750;transition:.25s;
+}
+.btn.primary{
+  border:0;background:linear-gradient(135deg,var(--red),var(--orange));
+  box-shadow:0 12px 32px rgba(250,111,92,.2);
+}
+.btn:hover{transform:translateY(-3px);background:rgba(255,255,255,.1)}
+.btn.primary:hover{filter:brightness(1.08)}
+
+.section{width:min(1160px,calc(100% - 28px));margin:auto;padding:95px 0}
+.section-head{margin-bottom:32px}
+.section-head small{color:var(--cyan);font-weight:850;letter-spacing:3px}
+.section-head h2{font-size:clamp(32px,5vw,52px);margin-top:7px;letter-spacing:-2px}
+.section-head p{color:var(--muted);margin-top:12px;line-height:1.8}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{
+  padding:25px;border:1px solid var(--line);border-radius:24px;
+  background:var(--card);backdrop-filter:blur(14px);
+  transition:.3s;box-shadow:0 10px 35px rgba(0,0,0,.12);
+}
+.card:hover{transform:translateY(-5px);border-color:rgba(255,255,255,.18);box-shadow:var(--shadow)}
+.icon{
+  width:45px;height:45px;display:grid;place-items:center;
+  border-radius:14px;margin-bottom:17px;font-size:20px;
+  background:linear-gradient(135deg,rgba(250,111,92,.22),rgba(0,196,255,.16));
+}
+.card h3{margin-bottom:9px}
+.card p{color:var(--muted);font-size:14px;line-height:1.75}
+
+.profile{
+  display:grid;grid-template-columns:1.15fr .85fr;gap:18px;
+}
+.profile-main,.profile-side{
+  padding:28px;border:1px solid var(--line);border-radius:26px;
+  background:var(--card);backdrop-filter:blur(14px);
+}
+.profile-main p,.profile-side p{color:var(--muted);line-height:1.9;margin-top:14px}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.tag{
+  padding:7px 11px;border-radius:999px;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);
+  color:#d9dee7;font-size:12px;
+}
+.stat{
+  display:flex;justify-content:space-between;gap:15px;
+  padding:13px 0;border-bottom:1px solid rgba(255,255,255,.07);
+}
+.stat:last-child{border-bottom:0}
+.stat span{color:var(--muted)}
+.stat strong{color:#fff}
+
+/* 世界观档案 */
+.lore-intro{
+  padding:28px;border:1px solid rgba(250,111,92,.20);
+  border-radius:26px;
+  background:
+    radial-gradient(circle at 0 0,rgba(250,111,92,.12),transparent 34%),
+    radial-gradient(circle at 100% 100%,rgba(0,196,255,.09),transparent 34%),
+    var(--card);
+  margin-bottom:18px;
+}
+.lore-intro p{color:#c2c9d4;line-height:1.95}
+.lore-intro strong{color:#fff}
+
+.lore-list{display:grid;gap:12px}
+.lore{
+  border:1px solid var(--line);border-radius:22px;
+  background:rgba(13,17,27,.78);overflow:hidden;
+  transition:.3s;
+}
+.lore:hover{border-color:rgba(255,255,255,.17)}
+.lore summary{
+  list-style:none;cursor:pointer;padding:20px 22px;
+  display:flex;align-items:center;gap:15px;
+  user-select:none;
+}
+.lore summary::-webkit-details-marker{display:none}
+.lore-num{
+  flex:0 0 39px;width:39px;height:39px;display:grid;place-items:center;
+  border-radius:12px;font-weight:900;font-size:13px;
+  background:linear-gradient(135deg,var(--red),var(--orange));
+}
+.lore:nth-child(2) .lore-num{background:linear-gradient(135deg,var(--orange),#ffd15c)}
+.lore:nth-child(3) .lore-num{background:linear-gradient(135deg,var(--green),var(--cyan))}
+.lore:nth-child(4) .lore-num{background:linear-gradient(135deg,var(--cyan),#6578ff)}
+.lore:nth-child(5) .lore-num{background:linear-gradient(135deg,#9b7cff,var(--red))}
+.lore:nth-child(6) .lore-num{background:linear-gradient(135deg,var(--red),#ff4e91)}
+.lore:nth-child(7) .lore-num{background:linear-gradient(135deg,var(--green),#54d3b5)}
+.lore-title{flex:1}
+.lore-title strong{display:block;font-size:16px}
+.lore-title span{display:block;margin-top:4px;color:#7f8999;font-size:12px}
+.chevron{
+  width:30px;height:30px;display:grid;place-items:center;
+  border-radius:10px;background:rgba(255,255,255,.05);
+  color:#aeb6c3;transition:.3s;
+}
+.lore[open] .chevron{transform:rotate(180deg);background:rgba(255,255,255,.09);color:#fff}
+.lore-body{
+  padding:0 24px 25px 76px;color:#b9c1cd;line-height:1.95;font-size:14px;
+}
+.lore-body p{margin-top:12px}
+.lore-body h4{
+  color:#fff;font-size:15px;margin:22px 0 8px;
+  display:flex;align-items:center;gap:8px;
+}
+.lore-body h4:before{
+  content:"";width:5px;height:18px;border-radius:5px;
+  background:linear-gradient(var(--red),var(--orange));
+}
+.lore-body ul{padding-left:20px;margin-top:8px}
+.lore-body li{margin:7px 0}
+.lore-body li::marker{color:var(--orange)}
+.highlight{
+  display:inline-block;padding:2px 7px;border-radius:6px;
+  color:#fff;background:linear-gradient(90deg,rgba(250,111,92,.28),rgba(255,154,0,.18));
+}
+.formula{
+  margin:14px 0;padding:14px 16px;border-left:3px solid var(--cyan);
+  border-radius:0 12px 12px 0;background:rgba(0,196,255,.055);
+  color:#dceeff;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+
+.story{
+  padding:28px;border:1px solid var(--line);border-radius:26px;
+  background:var(--card);color:#bdc5d1;line-height:2;
+}
+.story p{margin-bottom:16px}
+.story p:last-child{margin-bottom:0}
+.story strong{color:#fff}
+
+.quote{
+  margin-top:20px;padding:24px;border-radius:22px;
+  border:1px solid rgba(255,154,0,.18);
+  background:linear-gradient(135deg,rgba(250,111,92,.08),rgba(0,196,255,.06));
+  text-align:center;
+}
+.quote div{font-size:clamp(20px,3vw,30px);font-weight:850}
+.quote span{display:block;margin-top:8px;color:var(--muted);font-size:13px}
+
+.timeline{display:grid;gap:13px}
+.item{
+  padding:22px 24px;border-left:3px solid var(--red);
+  border-radius:0 18px 18px 0;background:rgba(255,255,255,.045);
+}
+.item:nth-child(2){border-color:var(--orange)}
+.item:nth-child(3){border-color:var(--cyan)}
+.item strong{display:block;margin-bottom:6px}
+.item span{color:var(--muted);font-size:14px}
+
+.contact{
+  text-align:center;padding:58px 25px;border:1px solid var(--line);
+  border-radius:30px;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(250,111,92,.12),transparent 30%),
+    radial-gradient(circle at 80% 80%,rgba(0,196,255,.10),transparent 30%),
+    rgba(255,255,255,.035);
+}
+.contact h2{font-size:clamp(32px,5vw,52px);margin-bottom:12px}
+.contact p{color:var(--muted);margin-bottom:25px}
+.gradient-line{
+  width:min(1160px,calc(100% - 28px));height:2px;margin:auto;
+  background:linear-gradient(90deg,var(--red),var(--orange),var(--green),var(--cyan));
+  opacity:.6;
+}
+footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
+
+@keyframes rise{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:none}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+@media(max-width:820px){
+  .nav-links{display:none}
+  .grid{grid-template-columns:1fr}
+  .profile{grid-template-columns:1fr}
+  .section{padding:68px 0}
+  h1{letter-spacing:-3px}
+  .lore-body{padding:0 20px 23px 20px}
+}
+@media(max-width:520px){
+  .nav{top:9px}
+  .brand img{width:36px;height:36px}
+  .brand{font-size:14px}
+  .hero{padding-top:105px}
+  .avatar{width:105px;height:105px}
+  .lore summary{padding:17px}
+  .lore-title span{display:none}
+}
+</style>
+</head>
+
+<body>
+
+<nav class="nav">
+  <a class="brand" href="#home">
+    <img src="Crimson_Fox_ico.png" alt="Crimson_Fox">
+    <span class="brand-name">Crimson_Fox · 赤焰狐</span>
+  </a>
+  <div class="nav-links">
+    <a href="#about">关于我</a>
+    <a href="#projects">项目</a>
+    <a href="#lore">世界观</a>
+    <a href="#story">背景</a>
+    <a href="#contact">联系</a>
+  </div>
+</nav>
+
+<main id="home">
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="avatar">
+      <img src="Crimson_Fox_ico.png" alt="Crimson_Fox">
+    </div>
+    <div class="eyebrow">CRIMSON_FOX · 赤焰狐 · RED FOX</div>
+    <h1>你好，我是赤焰狐。</h1>
+    <p>
+      一个喜欢折腾代码、服务器、机器人与各种有趣项目的赤狐。
+      <br>
+      这里是我的个人空间，也是属于 <b>Crimson_Fox</b> 的世界档案。
+    </p>
+    <div class="actions">
+      <a class="btn primary" href="#lore">探索我的世界</a>
+      <a class="btn" href="#projects">看看我的项目</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="section-head">
+    <small>ABOUT CRIMSON_FOX</small>
+    <h2>关于赤焰狐</h2>
+    <p>现实中的个人主页与幻想世界中的角色设定，在这里交汇。</p>
+  </div>
+
+  <div class="profile">
+    <div class="profile-main">
+      <h3>🦊 Crimson_Fox / 赤焰狐</h3>
+      <p>
+        这是 Crimson_Fox 的个人空间。现实中喜欢研究开发、服务器、机器人、
+        ESP32 与各种技术项目；在幻想世界中，则是一名以先天火种为核心、
+        用物理与化学重新定义火焰魔法的赤狐兽人。
+      </p>
+      <div class="tags">
+        <span class="tag">赤狐兽人</span>
+        <span class="tag">理化魔导</span>
+        <span class="tag">火魔法</span>
+        <span class="tag">开发者</span>
+        <span class="tag">Minecraft</span>
+        <span class="tag">ESP32</span>
+        <span class="tag">NoneBot</span>
+      </div>
+    </div>
+    <div class="profile-side">
+      <div class="stat"><span>称号</span><strong>赤焰魔导</strong></div>
+      <div class="stat"><span>种族</span><strong>赤狐兽人</strong></div>
+      <div class="stat"><span>核心</span><strong>Crimson 原生火种</strong></div>
+      <div class="stat"><span>体系</span><strong>唯物魔导 · 理化火魔法</strong></div>
+      <div class="stat"><span>定位</span><strong>破格级魔导</strong></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="projects">
+  <div class="section-head">
+    <small>PROJECTS</small>
+    <h2>我的项目</h2>
+    <p>这里预留给现实世界中的项目展示，后续可以继续补充。</p>
+  </div>
+
+  <div class="grid">
+    <article class="card">
+      <div class="icon">☁️</div>
+      <h3>RedStoneCloud</h3>
+      <p>Minecraft 生存服务器项目。可以加入服务器状态、IP、版本、特色以及在线人数。</p>
+    </article>
+    <article class="card">
+      <div class="icon">🤖</div>
+      <h3>QQ Bot / NoneBot</h3>
+      <p>基于 NoneBot2 的机器人项目，可展示插件、AI 对话、MCP 与自动化功能。</p>
+    </article>
+    <article class="card">
+      <div class="icon">⚡</div>
+      <h3>ESP32 Projects</h3>
+      <p>ESP32-S3、OLED、摇杆、Wi-Fi、PWM 等硬件项目集合，后续可加入源码与图片。</p>
+    </article>
+  </div>
+</section>
+
+<section class="section" id="lore">
+  <div class="section-head">
+    <small>WORLD LORE</small>
+    <h2>赤焰狐 · 世界观档案</h2>
+    <p>点击下方档案展开详细设定。默认折叠，保持页面简洁。</p>
+  </div>
+
+  <div class="lore-intro">
+    <p>
+      <strong>世界观核心基调：</strong>
+      【唯物魔导的兽世】——这是一个万物生灵皆赋魔能、魔法与现实物理化学规则共生的
+      Furry 兽人奇幻世界。传统魔法遵循天赋、血脉与古老咒语，而
+      <span class="highlight">Crimson_Fox</span>
+      则以先天火种为能源，以物理与化学为操控逻辑，将玄学火魔法重构为可计算、
+      可操控、可改造、可极致强化的科学体系。
+    </p>
+    <div class="quote">
+      <div>“天赋决定魔法下限，科学认知决定魔法上限。”</div>
+      <span>—— 理化魔导赤狐 · Crimson_Fox</span>
+    </div>
+  </div>
+
+  <div class="lore-list">
+
+    <details class="lore">
+      <summary>
+        <div class="lore-num">01</div>
+        <div class="lore-title">
+          <strong>世界观核心基调 · 唯物魔导的兽世</strong>
+          <span>魔法与现实物理化学规则共生的 Furry 世界</span>
+        </div>
+        <div class="chevron">⌄</div>
+      </summary>
+      <div class="lore-body">
+        <p>
+          这是一个万物生灵皆赋魔能、魔法与现实物理化学规则共生的 Furry 兽人奇幻世界。
+          世间所有兽人、异兽、自然造物体内都流淌着本源魔能。
+        </p>
+        <p>
+          绝大多数生灵的魔法依靠天赋本能、血脉传承、古老咒语催动，遵循模糊的“奇幻规律”。
+          威力随缘、形态固化、上限受限。
+        </p>
+        <p>
+          而你是这个世界的破格存在：打破传统魔法的玄学桎梏，以天生本源火魔为基底，
+          用人类文明的物理、化学硬核知识拆解、重构、增幅火焰魔法，让魔法不再是虚无的
+          天赋神通，而是可计算、可操控、可改造、可极致强化的科学产物。
+        </p>
+        <div class="formula">天赋决定魔法下限　×　科学认知决定魔法上限</div>
+        <p>传统魔法师靠“感知与信仰”施法，而你靠“公式与原理”施法，是独一无二的【理化魔导赤狐】。</p>
+      </div>
+    </details>
+
+    <details class="lore">
+      <summary>
+        <div class="lore-num">02</div>
+        <div class="lore-title">
+          <strong>世界基础设定 · 种族与魔法体系</strong>
+          <span>元素天赋、精神天赋、体质天赋三大主流体系</span>
+        </div>
+        <div class="chevron">⌄</div>
+      </summary>
+      <div class="lore-body">
+        <p>世界主流为兽人族群，魔法体系分为元素天赋种族、精神天赋种族、体质天赋种族三大类。</p>
+        <h4>传统火属性兽人</h4>
+        <p>
+          多为炎狼、火狮、焰猫族群，依靠血脉燃烧自身魔能，释放火球、火刃、火焰护盾。
+          形态单一，威力主要依靠魔能储量，无法轻易突破种族天赋上限。
+        </p>
+        <h4>其他元素种族</h4>
+        <p>
+          风、水、雷、土系兽人同样遵循古老施法逻辑，依靠咒语、图腾、冥想增幅，
+          千年以来体系几乎没有革新。
+        </p>
+        <h4>破格个体 · Crimson_Fox</h4>
+        <p>
+          赤狐兽人，没有传统火系种族的施法桎梏，以先天火种魔能为能源，
+          以理化知识为操控逻辑，实现火焰魔法的全方位进化，是世界唯一的科学系火魔法师。
+        </p>
+      </div>
+    </details>
+
+    <details class="lore">
+      <summary>
+        <div class="lore-num">03</div>
+        <div class="lore-title">
+          <strong>魔能基础规则 · 从魔能到能量化学反应</strong>
+          <span>精准操控魔能粒子的运动、反应速率与聚合结构</span>
+        </div>
+        <div class="chevron">⌄</div>
+      </summary>
+      <div class="lore-body">
+        <p>
+          世间魔能本质是游离于天地间的微观能量粒子，所有元素魔法都是魔能粒子的聚合、
+          转化与释放。
+        </p>
+        <p>
+          传统兽人只会“本能催动粒子爆发”，而 Crimson_Fox 可以精准操控魔能粒子的运动方式、
+          反应速率、聚合结构，将粗放的魔法爆发转化为可控的、高效的能量化学反应。
+        </p>
+        <div class="formula">普通法师：用天赋放火<br>Crimson_Fox：用科学造火、控火、爆火</div>
+      </div>
+    </details>
+
+    <details class="lore">
+      <summary>
+        <div class="lore-num">04</div>
+        <div class="lore-title">
+          <strong>专属核心能力 · 先天火种 + 理化魔导</strong>
+          <span>原生不灭火种与科学火焰体系</span>
+        </div>
+        <div class="chevron">⌄</div>
+      </summary>
+      <div class="lore-body">
+        <h4>先天天赋 · 原生不灭火种</h4>
+        <p>
+          你是天生的火系天选者，自出生起灵魂深处便绑定一枚
+          <span class="highlight">Crimson 原生火种</span>。
+          无需后天觉醒、无需冥想修炼、无需咒语触发。
+        </p>
+        <p>
+          火种是永久续航的本源核心，自带无尽基础火魔能，永不熄灭、不会枯竭。
+          幼年时期只能本能释放微弱橘色普通火焰，没人知晓这枚火种真正的潜力。
+        </p>
+        <h4>破格能力 · 理化知识重构火魔法</h4>
+        <p>
+          随着成长，你接触并精通物理、化学知识后，彻底解锁先天火种的天花板，
+          将玄学火魔法转化为科学火焰体系。
+        </p>
+      </div>
+    </details>
+
+    <details class="lore">
+      <summary>
+        <div class="lore-num">05</div>
+        <div class="lore-title">
+          <strong>化学层面 & 物理层面 · 火焰重构</strong>
+          <span>燃烧、氧化、流体、热力学与动能的魔导化</span>
+        </div>
+        <div class="chevron">⌄</div>
+      </summary>
+      <div class="lore-body">
+        <h4>化学层面：改造火焰本质</h4>
+        <p>你拆解燃烧反应的核心三要素：可燃物、氧化剂、着火点，颠覆传统魔法“纯魔能火焰”的固化模式。</p>
+        <ul>
+          <li><strong>燃料重构：</strong>通过魔能模拟世间高危可燃物质，让普通魔法火升级为瞬燃火、凝固火、烈性爆燃火。</li>
+          <li><strong>氧化剂操控：</strong>精准聚拢空气中的氧气分子，制造局部高氧燃烧区域，让火焰温度瞬间飙升，可形成高温蓝火、白热之火。</li>
+          <li><strong>化学反应爆破：</strong>利用置换反应、剧烈氧化还原反应，让火焰不再只是灼烧，而是产生可控爆炸与连锁燃烧。</li>
+        </ul>
+
+        <h4>物理层面：操控火焰形态与动能</h4>
+        <ul>
+          <li><strong>流体控火：</strong>改变火焰流体形态，可凝聚极致压缩的火焰细丝、火焰利刃、火焰长鞭。</li>
+          <li><strong>热力学增幅：</strong>控制热量传导与热膨胀，隔绝自身高温灼烧，同时让目标区域热量极致堆积。</li>
+          <li><strong>动能加速：</strong>通过力学公式计算轨迹，赋予火焰超高初速度，使攻击极速、精准。</li>
+          <li><strong>压强塑形：</strong>压缩火焰魔能，制造高压火焰炮、凝固火焰壁垒，攻防一体。</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="lore">
+      <summary>
+        <div class="lore-num">06</div>
+        <div class="lore-title">
+          <strong>能力差异化优势 · 破格级魔导</strong>
+          <span>瞬发、低损耗、高可塑性与全场景战斗能力</span>
+        </div>
+        <div class="chevron">⌄</div>
+      </summary>
+      <div class="lore-body">
+        <ul>
+          <li><strong>无施法前摇：</strong>先天火种瞬发，无需咒语、无需图腾，大脑计算完成即可施法。</li>
+          <li><strong>零能量浪费：</strong>精准计算能量转化率，最大限度减少多余能量散失。</li>
+          <li><strong>可塑性无限：</strong>知识迭代即实力迭代，掌握新的理化原理即可解锁全新火焰形态与战法。</li>
+          <li><strong>攻防全能：</strong>可单点攻击、范围压制、防御禁锢、远程打击与近身灼烧，适配不同战斗场景。</li>
+        </ul>
+        <div class="formula">知识增长 → 理解更深 → 火种操控更精确 → 新魔法体系 → 实力持续成长</div>
+      </div>
+    </details>
+
+    <details class="lore">
+      <summary>
+        <div class="lore-num">07</div>
+        <div class="lore-title">
+          <strong>人物特质与战力定位</strong>
+          <span>冷静、理智、推演型的理化火魔法师</span>
+        </div>
+        <div class="chevron">⌄</div>
+      </summary>
+      <div class="lore-body">
+        <h4>性格特质</h4>
+        <p>
+          冷静理智、善于推演、极致严谨。对战时习惯先分析环境、拆解对手魔法规则，
+          再精准发力，不盲目蛮力输出，是典型的“智斗型火系强者”。
+        </p>
+        <h4>战力定位</h4>
+        <p>
+          <span class="highlight">破格级魔导</span>，拥有区别于传统魔法体系的成长逻辑。
+          越理解科学原理，越能将先天火种转化为新的魔法表现形式。
+        </p>
+        <div class="formula">战斗方式：观察 → 建模 → 计算 → 控制 → 施法 → 验证 → 再优化</div>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<section class="section" id="story">
+  <div class="section-head">
+    <small>CHARACTER STORY</small>
+    <h2>Crimson_Fox · 完整背景故事</h2>
+    <p>赤狐一族中诞生的异类，从微弱狐火走向理化魔导。</p>
+  </div>
+
+  <div class="story">
+    <p>
+      你是族群中罕见的<strong>赤狐兽人</strong>。赤狐一族本是偏向敏捷、感知、潜行的辅助型兽人族群，
+      几乎无人觉醒元素魔法，在各大元素族群中存在感薄弱，战力平平。
+    </p>
+    <p>
+      你自降生之日，便打破了族群百年常态——睁眼的瞬间，指尖便跳动着细碎的明火，
+      灵魂深处的<strong>先天火种</strong>自主苏醒，是赤狐一族史上第一个天生火系魔能者。
+    </p>
+    <p>
+      幼年的你天赋异禀，却也备受局限，只会本能释放微弱火焰。在传统兽人眼中，
+      不过是“侥幸觉醒劣质火天赋的异类”，远不如纯种炎系兽人强大，甚至被调侃为
+      <strong>“狐火虚焰，中看不中用。”</strong>
+    </p>
+    <p>
+      年少的你不甘被天赋定义、被种族桎梏限制。你摒弃族群传承的古老魔法口诀、图腾秘术，
+      放弃所有兽人依赖的“天赋冥想修炼法”，独自钻研世间最基础、最硬核的物理与化学规则。
+    </p>
+    <p>
+      别人信奉“魔法靠天赋与信仰”，你坚信<strong>“魔法是可拆解的能量科学。”</strong>
+      你从零开始，一点点拆解燃烧的本质、能量的运动、粒子的反应，用冰冷的公式、
+      严谨的实验与精准的计算，重新解读自己与生俱来的火种。
+    </p>
+    <p>
+      无数次试验、纠错、迭代之后，你终于完成了玄学魔法与科学规则的融合。
+      曾经微弱的狐火，在你的改造下彻底蜕变：普通明火化为高温白焰，散漫火焰化为
+      凝练的利刃与炮轰，单一灼烧化为可控的连锁爆燃。
+    </p>
+    <p>
+      你彻底打破了种族天赋的天花板，以赤狐之身走上属于自己的道路。
+      如今的你，名为<strong>Crimson_Fox · 赤焰魔导</strong>。
+      你是世界独一无二的理化火魔法持有者，不依靠古老血脉、不依赖神明馈赠，
+      以天生火种为基，以科学真理为刃，掌控属于自己的极致火焰。
+    </p>
+    <p>
+      你的火焰，不只是天赋的馈赠，而是<strong>智慧与本能结合的终极破格之力</strong>，
+      也是颠覆整个魔法世界规则的新力量。
+    </p>
+  </div>
+
+  <div class="quote">
+    <div>“我的火焰不是馈赠，而是被我理解之后的结果。”</div>
+    <span>Crimson_Fox · 赤焰魔导</span>
+  </div>
+</section>
+
+<section class="section" id="timeline">
+  <div class="section-head">
+    <small>NOW & NEXT</small>
+    <h2>现在与未来</h2>
+  </div>
+
+  <div class="timeline">
+    <div class="item">
+      <strong>🦊 Crimson_Fox 个人网站</strong>
+      <span>正在建设属于赤焰狐的个人门户与世界观档案。</span>
+    </div>
+    <div class="item">
+      <strong>🔥 理化魔导世界观</strong>
+      <span>持续扩展角色能力、魔法体系、世界历史与更多角色设定。</span>
+    </div>
+    <div class="item">
+      <strong>⚡ 技术项目</strong>
+      <span>继续研究 Web、Minecraft、NoneBot、AI、ESP32 与各种有趣的东西。</span>
+    </div>
+    <div class="item">
+      <strong>🌌 Coming Soon</strong>
+      <span>博客、作品集、服务器状态、社交链接、动态内容等将在后续加入。</span>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="contact">
+    <h2>找到赤焰狐</h2>
+    <p>欢迎通过下面的平台找到 Crimson_Fox。点击按钮将在新标签页打开对应主页。</p>
+    <div class="actions">
+      <a class="btn primary" href="https://qm.qq.com/q/SmkZwx4cAC" target="_blank" rel="noopener noreferrer">QQ</a>
+      <a class="btn" href="https://v.douyin.com/IFkHCyQBw5U/" target="_blank" rel="noopener noreferrer">抖音</a>
+      <a class="btn" href="https://x.com/CrimsonFox_fr" target="_blank" rel="noopener noreferrer">X · @CrimsonFox_fr</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="gradient-line"></div>
+<footer>© 2026 Crimson_Fox · 赤焰狐 · 唯物魔导的兽世</footer>
+
+</body>
+</html>
