@@ -1,21 +1,21 @@
 window.COMMISSION_DATA = {
-  "updated": "2026-10-03T04:28:28",
+  "updated": "2026-10-03T05:27:37",
   "items": [
     {
       "name": "龙龙",
       "type": "模板",
       "status": "未完成",
-      "date": "2026-10-07"
+      "date": "2026-10-04"
     },
     {
       "name": "凉毅",
-      "type": "常稿",
+      "type": "模板",
       "status": "未完成",
-      "date": "2026-10-10"
+      "date": "2026-10-04"
     },
     {
       "name": "麦当当的救赎",
-      "type": "无偿",
+      "type": "模板",
       "status": "未完成",
       "date": "2026-10-07"
     },
@@ -27,31 +27,31 @@ window.COMMISSION_DATA = {
     },
     {
       "name": "Meditat3",
-      "type": "常稿",
+      "type": "模板",
       "status": "未完成",
       "date": "2026-10-17"
     },
     {
       "name": "新砚",
-      "type": "无偿",
+      "type": "模板",
       "status": "完成",
-      "date": "2026-09-20"
+      "date": "2026-10-03"
     },
     {
       "name": "小浩",
       "type": "模板",
       "status": "未完成",
-      "date": "2026-10-12"
+      "date": "2026-10-04"
     },
     {
       "name": "威威Aweglare",
-      "type": "常稿",
+      "type": "模板",
       "status": "未完成",
       "date": "2026-10-07"
     },
     {
       "name": "蓝岳",
-      "type": "无偿",
+      "type": "模板",
       "status": "未完成",
       "date": "2026-10-07"
     },
@@ -59,11 +59,11 @@ window.COMMISSION_DATA = {
       "name": "尘土",
       "type": "模板",
       "status": "完成",
-      "date": "2026-10-24"
+      "date": "2026-10-03"
     },
     {
       "name": "夜岚",
-      "type": "常稿",
+      "type": "无偿",
       "status": "未完成",
       "date": "2026-10-17"
     },
@@ -72,6 +72,24 @@ window.COMMISSION_DATA = {
       "type": "无偿",
       "status": "未完成",
       "date": "2026-10-24"
+    },
+    {
+      "name": "花落南枝",
+      "type": "模板",
+      "status": "未完成",
+      "date": "2026-10-04"
+    },
+    {
+      "name": "花落南枝",
+      "type": "模板",
+      "status": "完成",
+      "date": "2026-10-03"
+    },
+    {
+      "name": "烨羽墨曦（幻梦）",
+      "type": "无偿",
+      "status": "未完成",
+      "date": "2026-10-05"
     }
   ]
 };
