@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#f6f7fb" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0e1116" media="(prefers-color-scheme: dark)" />
+<!-- ⭐ 更新网页标题和 favicon -->
+<title>空焰 · 稿期看板</title>
+<link rel="icon" href="ico.png" type="image/png" />
+
+<!-- 提前设置主题，避免首屏闪烁 -->
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('theme');
+      var sys = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', saved || sys);
+    } catch (e) {}
+  })();
+</script>
+
+<link rel="stylesheet" href="css.css" />
+</head>
+<body>
+<div class="app">
+
+  <!-- 顶部栏 -->
+  <header class="header">
+    <div class="header-left">
+      <!-- ⭐ 替换为您的 ico.png -->
+      <img src="ico.png" alt="空焰" class="brand-logo" />
+      <div class="brand-text">
+        <h1>空焰</h1>
+        <span class="sub">Commission Schedule</span>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="m20 20-3.5-3.5"></path>
+        </svg>
+        <input id="search" type="text" placeholder="搜索名字…" autocomplete="off" />
+      </div>
+
+      <button id="themeToggle" class="icon-btn" aria-label="切换主题" title="切换亮/暗主题">
+        <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+        </svg>
+        <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- 筛选条（移动端可横向滚动） -->
+  <div class="filter-bar">
+    <div class="filter-group" id="typeFilter"></div>
+    <div class="filter-divider"></div>
+    <div class="filter-group" id="statusFilter"></div>
+  </div>
+
+  <!-- 看板 -->
+  <main class="board" id="board"></main>
+
+  <!-- 空状态 -->
+  <div id="empty" class="empty hidden">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+         stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 8v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8"></path>
+      <path d="M3 8V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2"></path>
+      <path d="M10 12h4"></path>
+    </svg>
+    <p>没有找到匹配的稿件</p>
+  </div>
+
+  <!-- 页脚 -->
+  <footer class="foot">
+    <span>最后更新 · <b id="updated">—</b></span>
+  </footer>
+</div>
+
+<script src="date.js"></script>
+<script>
+/* ============ 常量 ============ */
+const TYPES = ['全部', '模板', '常稿', '无偿'];
+const STATUSES = ['全部', '完成', '未完成', '放弃'];
+const STATUS_CLS = { '完成': 'done', '未完成': 'doing', '放弃': 'drop' };
+const TYPE_ORDER = ['模板', '常稿', '无偿'];
+
+/* ============ 数据 ============ */
+const DATA = window.COMMISSION_DATA || { updated: '', items: [] };
+if (!Array.isArray(DATA.items)) DATA.items = [];
+
+const state = { type: '全部', status: '全部', q: '' };
+
+/* ============ 主题切换 ============ */
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click', () => {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('theme', next); } catch (e) {}
+});
+
+/* ============ 初始化 ============ */
+(function init() {
+  if (!window.COMMISSION_DATA) return renderError();
+
+  buildFilters();
+
+  document.getElementById('search').addEventListener('input', (e) => {
+    state.q = e.target.value.trim().toLowerCase();
+    render();
+  });
+
+  document.getElementById('updated').textContent = fmtUpdated(DATA.updated);
+  render();
+})();
+
+/* ============ 找不到 date.js ============ */
+function renderError() {
+  document.querySelector('.filter-bar').style.display = 'none';
+  document.getElementById('board').innerHTML = `
+    <div class="notice">
+      <h3>⚠️ 找不到 date.js</h3>
+      <p>请确保 <code>date.js</code> 与 <code>index.html</code> 在同一目录。</p>
+      <p>运行 <code>python idea.py</code> 会自动生成该文件。</p>
+    </div>`;
+}
+
+/* ============ 筛选按钮 ============ */
+function buildFilters() {
+  const make = (id, options, group) => {
+    const el = document.getElementById(id);
+    el.innerHTML = options.map(v =>
+      `<button class="chip${v === state[group] ? ' active' : ''}"
+               data-group="${group}" data-val="${v}">${v}</button>`
+    ).join('');
+    el.querySelectorAll('.chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state[group] = btn.dataset.val;
+        el.querySelectorAll('.chip').forEach(b =>
+          b.classList.toggle('active', b === btn));
+        render();
+      });
+    });
+  };
+  make('typeFilter', TYPES, 'type');
+  make('statusFilter', STATUSES, 'status');
+}
+
+/* ============ 渲染 ============ */
+function render() {
+  const board = document.getElementById('board');
+
+  const filtered = DATA.items.filter(it => {
+    if (state.type !== '全部' && it.type !== state.type) return false;
+    if (state.status !== '全部' && it.status !== state.status) return false;
+    if (state.q && !String(it.name || '').toLowerCase().includes(state.q)) return false;
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    board.innerHTML = '';
+    document.getElementById('empty').classList.remove('hidden');
+    return;
+  }
+  document.getElementById('empty').classList.add('hidden');
+
+  /* 按类型分组 */
+  const groups = {};
+  filtered.forEach(it => {
+    const t = it.type || '未分类';
+    (groups[t] = groups[t] || []).push(it);
+  });
+
+  const order = TYPE_ORDER.filter(t => groups[t]);
+
+  board.innerHTML = order.map(type => {
+    const items = groups[type];
+    return `
+      <section class="column" data-type="${esc(type)}">
+        <header class="column-header">
+          <span class="col-dot col-dot--${typeCls(type)}"></span>
+          <span class="col-title">${esc(type)}</span>
+          <span class="col-count">${items.length}</span>
+        </header>
+        <div class="column-body">
+          ${items.map(cardHTML).join('')}
+        </div>
+      </section>`;
+  }).join('');
+}
+
+function cardHTML(it) {
+  const sc = STATUS_CLS[it.status] || 'doing';
+  const hasDate = it.date && String(it.date).trim();
+  return `
+  <article class="card card--${sc}">
+    <div class="card-top">
+      <h3 class="card-name">${esc(it.name || '未命名')}</h3>
+      <span class="pill pill--${sc}">${esc(it.status || '—')}</span>
+    </div>
+    <div class="card-bottom">
+      <svg class="cal-icon" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+        <path d="M3 10h18M8 3v4M16 3v4"></path>
+      </svg>
+      <span>${esc(hasDate ? it.date : '待定')}</span>
+    </div>
+  </article>`;
+}
+
+/* ============ 工具 ============ */
+function typeCls(t) {
+  return { '模板': 'tpl', '常稿': 'ord', '无偿': 'free' }[t] || 'ord';
+}
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function fmtUpdated(s) {
+  if (!s) return '—';
+  const d = new Date(s);
+  if (isNaN(d.getTime())) return String(s).replace('T', ' ').slice(0, 16);
+  const p = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+</script>
+</body>
+</html>
