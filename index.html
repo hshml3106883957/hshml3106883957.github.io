@@ -2087,9 +2087,8 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
       .filter(item =>
         item &&
         item.id !== undefined &&
-        item.id !== null &&
-        item.title &&
-        item.price
+        item.id !== null
+        /* 不再强行要求 item.title 和 item.price，避免数据抓取失败导致全部被过滤 */
       );
   }
 
