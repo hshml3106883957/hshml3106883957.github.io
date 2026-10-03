@@ -1397,7 +1397,7 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
 
 <!-- =========================================================
      引入本地 commission.js（唯一数据源）
-     该文件应定义 window.commissionData = { success, list, ... }
+     该文件应定义 commissionData 或 window.commissionData
      ========================================================= -->
 <script src="commission.js"></script>
 
@@ -2022,7 +2022,11 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
 /* =========================================================
    Crimson_Fox · 约稿展示系统（仅本地 commission.js）
    ---------------------------------------------------------
-   数据来源：同目录 commission.js 定义的 window.commissionData
+   数据来源：同目录 commission.js
+   兼容三种声明方式：
+   1. window.commissionData = {...}
+   2. const commissionData = {...}
+   3. var/let commissionData = {...}
    兼容两种 list 结构：
    A) list: [ { id, title, price, ... } ]
    B) list: [ { key, value: { id, title, price, ... } } ]
@@ -2333,11 +2337,17 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
     }
 
     try {
-      if (!window.commissionData || typeof window.commissionData !== 'object') {
-        throw new Error('未找到 commission.js 数据 (window.commissionData)');
+      /* 兼容 const / let / var / window 声明 */
+      let json = null;
+      if (typeof commissionData !== 'undefined' && commissionData) {
+        json = commissionData;
+      } else if (window.commissionData && typeof window.commissionData === 'object') {
+        json = window.commissionData;
       }
 
-      const json = window.commissionData;
+      if (!json) {
+        throw new Error('未找到 commission.js 数据 (commissionData)');
+      }
 
       allCommissionItems = parseCommissionResponse(json);
       commissionPage = 1;
