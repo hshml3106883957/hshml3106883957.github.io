@@ -541,6 +541,25 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
 .stat-card .num{font-size:26px;font-weight:800;color:#fff;line-height:1.2}
 .stat-card .label{color:var(--muted);font-size:13px;display:block;margin-top:4px}
 
+/* 数据来源信息条 */
+.stat-card.meta{
+  grid-column:1 / -1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px 16px;
+  flex-wrap:wrap;
+  padding:10px 12px;
+  background:rgba(255,255,255,.028);
+}
+.stat-card.meta .label{margin:0;font-size:12px}
+.stat-card.meta .dot{
+  width:7px;height:7px;border-radius:50%;display:inline-block;
+  background:var(--green);margin-right:6px;vertical-align:1px;
+  box-shadow:0 0 10px rgba(142,222,137,.8);
+}
+.stat-card.meta .dot.remote{background:var(--cyan);box-shadow:0 0 10px rgba(0,196,255,.8)}
+
 .commission-grid{
   grid-template-columns:repeat(3,minmax(0,1fr));
   align-items:start;
@@ -1378,6 +1397,12 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
 
 <button class="back-to-top" id="backToTop" type="button" aria-label="返回顶部">↑</button>
 
+<!-- =========================================================
+     引入本地 commission.js（优先数据源）
+     该文件应定义 window.commissionData = { success, list, ... }
+     ========================================================= -->
+<script src="commission.js"></script>
+
 <script>
 /* =========================================================
    Crimson_Fox · 背景魔能粒子
@@ -1998,14 +2023,18 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
 
 /* =========================================================
    Crimson_Fox · 约稿展示系统
+   ---------------------------------------------------------
+   数据来源（优先级从高到低）：
+   1. window.commissionData（由同目录 commission.js 提供）
+   2. https://getcommissionlist.redsc.cn/（远程兜底）
 
-   API：https://getcommissionlist.redsc.cn/
-   规则：
-   1. 只请求根地址，不添加任何查询参数。
-   2. API 返回的 list 是完整稿件列表。
-   3. 最后一项 key=data 是求稿信息，不是稿件，自动过滤。
-   4. 分页完全由前端完成，不会因翻页再次请求 API。
-   5. 每张卡片使用独立 <details>，展开互不影响。
+   兼容两种 list 结构：
+   A) list: [ { id, title, price, ... } ]
+   B) list: [ { key, value: { id, title, price, ... } } ]
+      —— 其中 key=data 的求稿信息会被自动过滤
+
+   分页完全由前端完成，翻页不会再次发起请求。
+   每张卡片使用独立 <details>，展开互不影响。
    ========================================================= */
 (function () {
   'use strict';
@@ -2016,6 +2045,9 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
   let allCommissionItems = [];
   let commissionPage = 1;
   let commissionLoading = false;
+
+  /* 数据来源元信息：{ source: 'local' | 'remote', updatedAt: string } */
+  let commissionMeta = { source: '', updatedAt: '' };
 
   function escapeHtml(value) {
     if (value === null || value === undefined) return '';
@@ -2032,19 +2064,29 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
     return Number.isFinite(n) ? n : 0;
   }
 
+  /* ---------- 解析：兼容两种 list 结构 ---------- */
   function parseCommissionResponse(json) {
     if (!json || typeof json !== 'object') {
-      throw new Error('API 返回的数据不是 JSON 对象');
+      throw new Error('数据不是 JSON 对象');
     }
-    if (json.success !== true) {
-      throw new Error('API 返回 success=false');
+    if (json.success === false) {
+      throw new Error('数据 success=false');
     }
     if (!Array.isArray(json.list)) {
-      throw new Error('API 缺少 list 数组');
+      throw new Error('数据缺少 list 数组');
     }
 
     return json.list
-      .map(entry => entry && entry.value)
+      .map(entry => {
+        /* 结构 B：{ key, value:{...} }，其中 key=data 是求稿信息，非稿件 */
+        if (entry && typeof entry === 'object' &&
+            entry.value && typeof entry.value === 'object') {
+          if (entry.key === 'data') return null;
+          return entry.value;
+        }
+        /* 结构 A：直接就是稿件对象 */
+        return entry;
+      })
       .filter(item =>
         item &&
         item.id !== undefined &&
@@ -2065,6 +2107,7 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
     return description ? String(description) : '';
   }
 
+  /* ---------- 统计 ---------- */
   function renderStats() {
     const stats = document.getElementById('commissionStats');
     if (!stats) return;
@@ -2072,9 +2115,9 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
     const total = allCommissionItems.length;
     const inner = allCommissionItems.filter(i => i.tag === '站内模板接稿').length;
     const outer = allCommissionItems.filter(i => i.tag === '站外模板接稿').length;
-    const sold = allCommissionItems.reduce((sum, i) => sum + getNumber(i.sold), 0);
+    const sold  = allCommissionItems.reduce((sum, i) => sum + getNumber(i.sold), 0);
 
-    stats.innerHTML = `
+    let html = `
       <div class="stat-card">
         <div class="num">${total}</div>
         <span class="label">全部模板</span>
@@ -2092,8 +2135,37 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
         <span class="label">累计售出</span>
       </div>
     `;
+
+    /* 数据来源信息条 */
+    if (commissionMeta.source) {
+      const isLocal = commissionMeta.source === 'local';
+      let updatedText = '';
+
+      if (commissionMeta.updatedAt) {
+        const d = new Date(commissionMeta.updatedAt);
+        if (!isNaN(d.getTime())) {
+          updatedText = d.toLocaleString('zh-CN', {
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', hour12: false
+          });
+        }
+      }
+
+      html += `
+        <div class="stat-card meta">
+          <span class="label">
+            <i class="dot ${isLocal ? '' : 'remote'}"></i>
+            数据来源：${isLocal ? '本地 commission.js' : '远程 API'}
+          </span>
+          ${updatedText ? `<span class="label">更新于 ${escapeHtml(updatedText)}</span>` : ''}
+        </div>
+      `;
+    }
+
+    stats.innerHTML = html;
   }
 
+  /* ---------- 卡片 ---------- */
   function renderCommissionCard(item) {
     const id = escapeHtml(item.id);
     const title = escapeHtml(item.title || '未命名稿件');
@@ -2119,6 +2191,7 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
               alt="${title} 预览图"
               loading="lazy"
               decoding="async"
+              referrerpolicy="no-referrer"
               onerror="this.remove()"
             >
           ` : ''}
@@ -2172,6 +2245,7 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
     grid.setAttribute('aria-busy', 'false');
   }
 
+  /* ---------- 分页 ---------- */
   function renderPagination() {
     const pagination = document.getElementById('commissionPagination');
     if (!pagination) return;
@@ -2256,6 +2330,27 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
     }
   }
 
+  /* ---------- 数据请求：本地 commission.js 优先 → 远程兜底 ---------- */
+  async function requestCommissionData() {
+    /* ① 使用全局 commissionData（由 commission.js 定义） */
+    if (window.commissionData && typeof window.commissionData === 'object') {
+      const json = window.commissionData;
+      if (json.success !== false && Array.isArray(json.list)) {
+        return { json, source: 'local' };
+      }
+    }
+
+    /* ② 远程 API */
+    const res = await fetch(COMMISSION_API, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      cache: 'no-store'
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    return { json: await res.json(), source: 'remote' };
+  }
+
   async function loadCommissions() {
     if (commissionLoading) return;
     commissionLoading = true;
@@ -2267,26 +2362,26 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
     }
 
     try {
-      const response = await fetch(COMMISSION_API, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' },
-        cache: 'no-store'
-      });
+      const { json, source } = await requestCommissionData();
 
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-      const json = await response.json();
       allCommissionItems = parseCommissionResponse(json);
       commissionPage = 1;
+      commissionMeta = {
+        source: source,
+        updatedAt: json.updated_at || ''
+      };
 
       renderCommissions();
 
-      console.log(`[Commission] API loaded: ${allCommissionItems.length} items`);
+      console.log(
+        `[Commission] 数据来源: ${source}，共 ${allCommissionItems.length} 条`
+      );
     } catch (error) {
-      console.error('[Commission] API 请求失败：', error);
+      console.error('[Commission] 数据加载失败：', error);
 
       allCommissionItems = [];
       commissionPage = 1;
+      commissionMeta = { source: '', updatedAt: '' };
 
       if (grid) {
         grid.setAttribute('aria-busy', 'false');
@@ -2308,6 +2403,7 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
     }
   }
 
+  /* ---------- 事件绑定 ---------- */
   document.addEventListener('click', function (event) {
     const button = event.target.closest('#commissionPagination button[data-page]');
     if (!button || button.disabled) return;
