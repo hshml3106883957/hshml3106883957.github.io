@@ -1,16 +1,25 @@
 // =========================================================
 // 自动生成的接稿数据
 // 请勿手动修改
-// 更新时间：2026-10-03T04:38:28.420654+00:00
+// 更新时间：2026-10-03T04:50:12.222538+00:00
 // =========================================================
 
 const commissionData = {
   "success": true,
   "uid": "782552637",
-  "total": 10,
-  "updated_at": "2026-10-03T04:38:28.420654+00:00",
+  "total": 11,
+  "updated_at": "2026-10-03T04:50:12.222538+00:00",
   "source": "https://uc.quqimeng.com/module_page/page_user_info/index.php?user=782552637",
   "list": [
+    {
+      "id": "1681",
+      "title": "[不温宁]表情贴纸",
+      "price": "11.00 元",
+      "sold": "0",
+      "tag": "站内模板接稿",
+      "preview_img": "https://uc.quqimeng.com/module_page/page_jiegao/seller/threads_manage/ajax/getPIC.php?user=782552637&id=1681&img=1",
+      "detail_url": "https://uc.quqimeng.com/module_page/page_jiegao/detail.php?id=1681"
+    },
     {
       "id": "1679",
       "title": "破龙牌表情包4x",
