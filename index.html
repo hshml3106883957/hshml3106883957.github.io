@@ -19,7 +19,6 @@
 <meta name="twitter:image" content="Crimson_Fox_ico.png">
 
 <link rel="icon" type="image/png" href="Crimson_Fox_ico.png">
-<link rel="preconnect" href="https://getcommissionlist.redsc.cn">
 
 <style>
 /* =========================================================
@@ -558,7 +557,6 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
   background:var(--green);margin-right:6px;vertical-align:1px;
   box-shadow:0 0 10px rgba(142,222,137,.8);
 }
-.stat-card.meta .dot.remote{background:var(--cyan);box-shadow:0 0 10px rgba(0,196,255,.8)}
 
 .commission-grid{
   grid-template-columns:repeat(3,minmax(0,1fr));
@@ -1398,7 +1396,7 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
 <button class="back-to-top" id="backToTop" type="button" aria-label="返回顶部">↑</button>
 
 <!-- =========================================================
-     引入本地 commission.js（优先数据源）
+     引入本地 commission.js（唯一数据源）
      该文件应定义 window.commissionData = { success, list, ... }
      ========================================================= -->
 <script src="commission.js"></script>
@@ -2022,32 +2020,27 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
 })();
 
 /* =========================================================
-   Crimson_Fox · 约稿展示系统
+   Crimson_Fox · 约稿展示系统（仅本地 commission.js）
    ---------------------------------------------------------
-   数据来源（优先级从高到低）：
-   1. window.commissionData（由同目录 commission.js 提供）
-   2. https://getcommissionlist.redsc.cn/（远程兜底）
-
+   数据来源：同目录 commission.js 定义的 window.commissionData
    兼容两种 list 结构：
    A) list: [ { id, title, price, ... } ]
    B) list: [ { key, value: { id, title, price, ... } } ]
       —— 其中 key=data 的求稿信息会被自动过滤
-
    分页完全由前端完成，翻页不会再次发起请求。
    每张卡片使用独立 <details>，展开互不影响。
    ========================================================= */
 (function () {
   'use strict';
 
-  const COMMISSION_API = 'https://getcommissionlist.redsc.cn/';
   const COMMISSIONS_PER_PAGE = 6;
 
   let allCommissionItems = [];
   let commissionPage = 1;
   let commissionLoading = false;
 
-  /* 数据来源元信息：{ source: 'local' | 'remote', updatedAt: string } */
-  let commissionMeta = { source: '', updatedAt: '' };
+  /* 数据来源元信息（本地固定） */
+  let commissionMeta = { source: 'local', updatedAt: '' };
 
   function escapeHtml(value) {
     if (value === null || value === undefined) return '';
@@ -2136,11 +2129,9 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
       </div>
     `;
 
-    /* 数据来源信息条 */
+    /* 数据来源信息条（本地） */
     if (commissionMeta.source) {
-      const isLocal = commissionMeta.source === 'local';
       let updatedText = '';
-
       if (commissionMeta.updatedAt) {
         const d = new Date(commissionMeta.updatedAt);
         if (!isNaN(d.getTime())) {
@@ -2154,8 +2145,8 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
       html += `
         <div class="stat-card meta">
           <span class="label">
-            <i class="dot ${isLocal ? '' : 'remote'}"></i>
-            数据来源：${isLocal ? '本地 commission.js' : '远程 API'}
+            <i class="dot"></i>
+            数据来源：本地 commission.js
           </span>
           ${updatedText ? `<span class="label">更新于 ${escapeHtml(updatedText)}</span>` : ''}
         </div>
@@ -2330,27 +2321,7 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
     }
   }
 
-  /* ---------- 数据请求：本地 commission.js 优先 → 远程兜底 ---------- */
-  async function requestCommissionData() {
-    /* ① 使用全局 commissionData（由 commission.js 定义） */
-    if (window.commissionData && typeof window.commissionData === 'object') {
-      const json = window.commissionData;
-      if (json.success !== false && Array.isArray(json.list)) {
-        return { json, source: 'local' };
-      }
-    }
-
-    /* ② 远程 API */
-    const res = await fetch(COMMISSION_API, {
-      method: 'GET',
-      headers: { 'Accept': 'application/json' },
-      cache: 'no-store'
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-    return { json: await res.json(), source: 'remote' };
-  }
-
+  /* ---------- 数据加载：仅使用本地 commission.js ---------- */
   async function loadCommissions() {
     if (commissionLoading) return;
     commissionLoading = true;
@@ -2362,26 +2333,30 @@ footer{text-align:center;padding:30px 16px 45px;color:#6f7888;font-size:13px}
     }
 
     try {
-      const { json, source } = await requestCommissionData();
+      if (!window.commissionData || typeof window.commissionData !== 'object') {
+        throw new Error('未找到 commission.js 数据 (window.commissionData)');
+      }
+
+      const json = window.commissionData;
 
       allCommissionItems = parseCommissionResponse(json);
       commissionPage = 1;
       commissionMeta = {
-        source: source,
+        source: 'local',
         updatedAt: json.updated_at || ''
       };
 
       renderCommissions();
 
       console.log(
-        `[Commission] 数据来源: ${source}，共 ${allCommissionItems.length} 条`
+        `[Commission] 本地 commission.js 加载成功，共 ${allCommissionItems.length} 条`
       );
     } catch (error) {
       console.error('[Commission] 数据加载失败：', error);
 
       allCommissionItems = [];
       commissionPage = 1;
-      commissionMeta = { source: '', updatedAt: '' };
+      commissionMeta = { source: 'local', updatedAt: '' };
 
       if (grid) {
         grid.setAttribute('aria-busy', 'false');
