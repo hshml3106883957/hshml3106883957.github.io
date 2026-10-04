@@ -1,5 +1,5 @@
 /* ============================================================
-   css.css —— 空焰 · 稿期看板样式（网格平铺版）
+   css.css —— 空焰 · 稿期看板样式（网格平铺 + QQ 头像版）
    ============================================================ */
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -178,7 +178,7 @@ body::before {
   pointer-events: none;
 }
 .search-wrap input {
-  width: 230px;
+  width: 240px;
   padding: 9px 14px 9px 34px;
   font-family: inherit;
   font-size: 13.5px;
@@ -226,7 +226,7 @@ body::before {
 [data-theme="dark"]  .icon-sun  { opacity: 1; transform: rotate(0) scale(1); }
 [data-theme="dark"]  .icon-moon { opacity: 0; transform: rotate(90deg) scale(.7); }
 
-/* ---------- 大 Tab ---------- */
+/* ---------- Tab ---------- */
 .tab-bar {
   position: relative;
   display: flex;
@@ -296,7 +296,7 @@ body::before {
   pointer-events: none;
 }
 
-/* ---------- 类型筛选 ---------- */
+/* ---------- 筛选 ---------- */
 .filter-bar {
   display: flex;
   align-items: center;
@@ -339,11 +339,11 @@ body::before {
 }
 [data-theme="dark"] .chip.active { color: #0e1116; }
 
-/* ---------- ⭐ 看板：网格平铺 ---------- */
+/* ---------- 看板：网格平铺 ---------- */
 .board {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   gap: 14px;
   padding: 20px 24px 24px;
   overflow-y: auto;
@@ -359,7 +359,6 @@ body::before {
 }
 .board::-webkit-scrollbar-thumb:hover { background: var(--muted); }
 
-/* 翻页动画：卡片依次淡入 */
 .board.flipping .card {
   animation: pageIn .4s cubic-bezier(.2, .7, .3, 1) both;
 }
@@ -367,7 +366,6 @@ body::before {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: none; }
 }
-/* 前几张错开出现 */
 .board.flipping .card:nth-child(1)  { animation-delay: 0s; }
 .board.flipping .card:nth-child(2)  { animation-delay: .03s; }
 .board.flipping .card:nth-child(3)  { animation-delay: .06s; }
@@ -392,7 +390,6 @@ body::before {
               border-color .18s ease;
 }
 
-/* 左侧状态色条 */
 .card::before {
   content: "";
   position: absolute;
@@ -414,16 +411,40 @@ body::before {
   box-shadow: var(--shadow-md);
 }
 
-/* 顶部：类型 + 状态 */
+/* 顶部：类型/状态 pill + 头像 */
 .card-top {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 10px;
 }
 
-/* 卡片名字 */
+.card-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ⭐ QQ 头像 */
+.card-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid var(--line);
+  background: var(--col-bg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .06);
+  transition: transform .2s ease, border-color .2s ease;
+}
+.card:hover .card-avatar {
+  transform: scale(1.06);
+  border-color: var(--accent);
+}
+
 .card-name {
   font-size: 15px;
   font-weight: 650;
@@ -434,25 +455,25 @@ body::before {
   margin-bottom: 10px;
 }
 
-/* 底部：画师 + 时间 */
 .card-meta {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
   flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
   font-size: 12px;
   color: var(--muted);
 }
 
 .artist,
-.date {
+.date,
+.qq {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   font-variant-numeric: tabular-nums;
 }
 .artist { color: var(--text-soft); font-weight: 500; }
+.qq     { color: var(--text-soft); }
 
 .mini-icon {
   width: 13px;
@@ -472,11 +493,9 @@ body::before {
   border-radius: 6px;
   flex-shrink: 0;
 }
-/* 状态 */
 .pill--done  { color: var(--done);  background: var(--done-soft); }
 .pill--doing { color: var(--doing); background: var(--doing-soft); }
 .pill--drop  { color: var(--drop);  background: var(--drop-soft); }
-/* 类型 */
 .pill--tpl   { color: var(--tpl);   background: var(--tpl-soft); }
 .pill--ord   { color: var(--ord);   background: var(--ord-soft); }
 .pill--free  { color: var(--free);  background: var(--free-soft); }
@@ -538,7 +557,7 @@ body::before {
    响应式
    ============================================================ */
 @media (max-width: 900px) {
-  .search-wrap input { width: 180px; }
+  .search-wrap input { width: 190px; }
   .board {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 12px;
@@ -573,6 +592,7 @@ body::before {
 
   .card { padding: 13px 14px 12px 17px; }
   .card-name { font-size: 14.5px; }
+  .card-avatar { width: 38px; height: 38px; }
 
   .foot { padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
   .notice { margin: 24px 16px; padding: 24px 18px; }
@@ -592,6 +612,7 @@ body::before {
 
 @media (hover: none) {
   .card:hover { transform: none; box-shadow: var(--shadow-sm); }
+  .card:hover .card-avatar { transform: none; border-color: var(--line); }
   .icon-btn:hover { transform: none; }
   .chip:hover { background: var(--bg-elev); border-color: var(--line); color: var(--text-soft); }
 }
