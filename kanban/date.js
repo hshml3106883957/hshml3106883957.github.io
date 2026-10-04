@@ -1,5 +1,5 @@
 window.COMMISSION_DATA = {
-  "updated": "2026-10-05T01:52:25",
+  "updated": "2026-10-05T01:58:36",
   "items": [
     {
       "name": "凉毅",
@@ -50,15 +50,6 @@ window.COMMISSION_DATA = {
       "name": "威威Aweglare",
       "artist": "空烬",
       "qq": "",
-      "avatar": "",
-      "type": "模板",
-      "status": "未完成",
-      "date": "2026-10-07"
-    },
-    {
-      "name": "蓝岳",
-      "artist": "空烬",
-      "qq": "2559224633",
       "avatar": "",
       "type": "模板",
       "status": "未完成",
@@ -162,6 +153,15 @@ window.COMMISSION_DATA = {
       "type": "无偿",
       "status": "未完成",
       "date": "2026-10-04"
+    },
+    {
+      "name": "🐾蓝岳🐾",
+      "artist": "空烬",
+      "qq": "2559224633",
+      "avatar": "",
+      "type": "模板",
+      "status": "未完成",
+      "date": "2026-10-07"
     }
   ]
 };
