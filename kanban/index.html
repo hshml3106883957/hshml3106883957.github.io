@@ -93,7 +93,7 @@
 /* ============ 常量 ============ */
 const TYPES = ['全部', '模板', '常稿', '无偿'];
 const STATUS_CLS = { '完成': 'done', '未完成': 'doing', '放弃': 'drop' };
-const TYPE_ORDER = ['模板', '常稿', '无偿'];
+const TYPE_CLS   = { '模板': 'tpl', '常稿': 'ord', '无偿': 'free' };
 
 /* ============ 数据 ============ */
 const DATA = window.COMMISSION_DATA || { updated: '', items: [] };
@@ -189,7 +189,7 @@ function buildTypeFilter() {
   });
 }
 
-/* ============ 渲染 ============ */
+/* ============ 渲染：平铺网格 ============ */
 function render() {
   const board = document.getElementById('board');
 
@@ -211,6 +211,9 @@ function render() {
     return true;
   });
 
+  /* 按日期倒序 */
+  filtered.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+
   if (filtered.length === 0) {
     board.innerHTML = '';
     document.getElementById('empty').classList.remove('hidden');
@@ -218,29 +221,7 @@ function render() {
   }
   document.getElementById('empty').classList.add('hidden');
 
-  /* 按类型分组 */
-  const groups = {};
-  filtered.forEach(it => {
-    const t = it.type || '未分类';
-    (groups[t] = groups[t] || []).push(it);
-  });
-
-  const order = TYPE_ORDER.filter(t => groups[t]);
-
-  board.innerHTML = order.map(type => {
-    const items = groups[type];
-    return `
-      <section class="column" data-type="${esc(type)}">
-        <header class="column-header">
-          <span class="col-dot col-dot--${typeCls(type)}"></span>
-          <span class="col-title">${esc(type)}</span>
-          <span class="col-count">${items.length}</span>
-        </header>
-        <div class="column-body">
-          ${items.map(cardHTML).join('')}
-        </div>
-      </section>`;
-  }).join('');
+  board.innerHTML = filtered.map(cardHTML).join('');
 }
 
 /* ============ Tab 计数 ============ */
@@ -254,14 +235,16 @@ function updateTabCounts() {
 /* ============ 卡片 ============ */
 function cardHTML(it) {
   const sc = STATUS_CLS[it.status] || 'doing';
+  const tc = TYPE_CLS[it.type] || 'ord';
   const hasDate = it.date && String(it.date).trim();
   const hasArtist = it.artist && String(it.artist).trim();
   return `
   <article class="card card--${sc}">
     <div class="card-top">
-      <h3 class="card-name">${esc(it.name || '未命名')}</h3>
+      <span class="pill pill--${tc}">${esc(it.type || '—')}</span>
       <span class="pill pill--${sc}">${esc(it.status || '—')}</span>
     </div>
+    <h3 class="card-name">${esc(it.name || '未命名')}</h3>
     <div class="card-meta">
       ${hasArtist ? `
       <span class="artist">
@@ -285,9 +268,6 @@ function cardHTML(it) {
 }
 
 /* ============ 工具 ============ */
-function typeCls(t) {
-  return { '模板': 'tpl', '常稿': 'ord', '无偿': 'free' }[t] || 'ord';
-}
 function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
