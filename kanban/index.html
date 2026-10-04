@@ -21,6 +21,7 @@
 <body>
 <div class="app">
 
+  <!-- 顶部栏 -->
   <header class="header">
     <div class="header-left">
       <img src="ico.png" alt="空焰" class="brand-logo" />
@@ -52,6 +53,7 @@
     </div>
   </header>
 
+  <!-- 大分类 Tab -->
   <nav class="tab-bar" id="tabBar">
     <button class="tab-btn active" data-tab="doing">
       <span class="tab-label">未完成</span>
@@ -64,6 +66,7 @@
     <span class="tab-indicator" id="tabIndicator"></span>
   </nav>
 
+  <!-- 类型筛选 -->
   <div class="filter-bar">
     <div class="filter-group" id="typeFilter"></div>
   </div>
@@ -207,6 +210,7 @@ function render() {
     return true;
   });
 
+  /* 按日期倒序 */
   filtered.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
 
   if (filtered.length === 0) {
@@ -221,33 +225,35 @@ function render() {
 
 /* ============ Tab 计数 ============ */
 function updateTabCounts() {
-  const doneCount = DATA.items.filter(i => i.status === '完成').length;
+  const doneCount  = DATA.items.filter(i => i.status === '完成').length;
   const doingCount = DATA.items.length - doneCount;
   document.getElementById('countDoing').textContent = doingCount;
-  document.getElementById('countDone').textContent = doneCount;
+  document.getElementById('countDone').textContent  = doneCount;
+}
+
+/* ============ 头像 URL ============ */
+function avatarUrl(it) {
+  if (it.avatar && String(it.avatar).trim()) return it.avatar;
+  if (it.qq && String(it.qq).trim()) {
+    return `https://thirdqq.qlogo.cn/g?b=sdk&s=100&nk=${it.qq}`;
+  }
+  return '';
 }
 
 /* ============ 卡片 ============ */
 function cardHTML(it) {
   const sc = STATUS_CLS[it.status] || 'doing';
-  const tc = TYPE_CLS[it.type] || 'ord';
+  const tc = TYPE_CLS[it.type]   || 'ord';
   const hasDate   = it.date   && String(it.date).trim();
   const hasArtist = it.artist && String(it.artist).trim();
   const hasQQ     = it.qq     && String(it.qq).trim();
-  const hasAvatar = it.avatar && String(it.avatar).trim();
+  const aUrl      = avatarUrl(it);
 
-  /* 头像：优先用 avatar，没有就用 QQ 头像，都没有就不显示 */
-  let avatarHTML = '';
-  if (hasAvatar) {
-    avatarHTML = `<img class="card-avatar" src="${esc(it.avatar)}" alt=""
-                       referrerpolicy="no-referrer"
-                       onerror="this.replaceWith(makeQQAvatar('${esc(it.qq || '')}'))">`;
-  } else if (hasQQ) {
-    avatarHTML = `<img class="card-avatar"
-                       src="https://thirdqq.qlogo.cn/g?b=sdk&s=100&nk=${esc(it.qq)}"
-                       alt="" referrerpolicy="no-referrer"
-                       onerror="this.style.display='none'">`;
-  }
+  const avatarHTML = aUrl
+    ? `<img class="card-avatar" src="${esc(aUrl)}" alt=""
+             referrerpolicy="no-referrer"
+             onerror="this.style.display='none'">`
+    : '';
 
   return `
   <article class="card card--${sc}">
@@ -293,19 +299,6 @@ function cardHTML(it) {
 }
 
 /* ============ 工具 ============ */
-function makeQQAvatar(qq) {
-  if (!qq) {
-    const span = document.createElement('span');
-    return span;
-  }
-  const img = document.createElement('img');
-  img.className = 'card-avatar';
-  img.src = `https://thirdqq.qlogo.cn/g?b=sdk&s=100&nk=${qq}`;
-  img.referrerPolicy = 'no-referrer';
-  img.onerror = () => img.style.display = 'none';
-  return img;
-}
-
 function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
