@@ -1,18 +1,9 @@
 window.COMMISSION_DATA = {
-  "updated": "2026-10-05T01:15:25",
+  "updated": "2026-10-05T01:52:25",
   "items": [
     {
-      "name": "龙龙",
-      "artist": "",
-      "qq": "",
-      "avatar": "",
-      "type": "模板",
-      "status": "未完成",
-      "date": "2026-10-04"
-    },
-    {
       "name": "凉毅",
-      "artist": "",
+      "artist": "空烬",
       "qq": "",
       "avatar": "",
       "type": "模板",
@@ -21,7 +12,7 @@ window.COMMISSION_DATA = {
     },
     {
       "name": "麦当当的救赎",
-      "artist": "",
+      "artist": "空烬",
       "qq": "",
       "avatar": "",
       "type": "模板",
@@ -30,7 +21,7 @@ window.COMMISSION_DATA = {
     },
     {
       "name": "明明",
-      "artist": "",
+      "artist": "空烬",
       "qq": "",
       "avatar": "",
       "type": "模板",
@@ -39,7 +30,7 @@ window.COMMISSION_DATA = {
     },
     {
       "name": "Meditat3",
-      "artist": "",
+      "artist": "空烬",
       "qq": "",
       "avatar": "",
       "type": "模板",
@@ -47,18 +38,9 @@ window.COMMISSION_DATA = {
       "date": "2026-10-17"
     },
     {
-      "name": "新砚",
-      "artist": "",
-      "qq": "",
-      "avatar": "",
-      "type": "模板",
-      "status": "完成",
-      "date": "2026-10-03"
-    },
-    {
       "name": "小浩",
-      "artist": "",
-      "qq": "",
+      "artist": "空烬",
+      "qq": "948422475",
       "avatar": "",
       "type": "模板",
       "status": "完成",
@@ -66,7 +48,7 @@ window.COMMISSION_DATA = {
     },
     {
       "name": "威威Aweglare",
-      "artist": "",
+      "artist": "空烬",
       "qq": "",
       "avatar": "",
       "type": "模板",
@@ -75,8 +57,8 @@ window.COMMISSION_DATA = {
     },
     {
       "name": "蓝岳",
-      "artist": "",
-      "qq": "",
+      "artist": "空烬",
+      "qq": "2559224633",
       "avatar": "",
       "type": "模板",
       "status": "未完成",
@@ -84,8 +66,8 @@ window.COMMISSION_DATA = {
     },
     {
       "name": "尘土",
-      "artist": "",
-      "qq": "",
+      "artist": "空烬",
+      "qq": "2662697292",
       "avatar": "",
       "type": "模板",
       "status": "完成",
@@ -93,7 +75,7 @@ window.COMMISSION_DATA = {
     },
     {
       "name": "夜岚",
-      "artist": "",
+      "artist": "空烬",
       "qq": "",
       "avatar": "",
       "type": "无偿",
@@ -102,7 +84,7 @@ window.COMMISSION_DATA = {
     },
     {
       "name": "赤焰狐（科技狐）",
-      "artist": "",
+      "artist": "空烬",
       "qq": "782552637",
       "avatar": "https://thirdqq.qlogo.cn/g?b=sdk&k=FTj6wkDRx5FscSXJoYlCpA&kti=aSM8iRHyHcI&s=640&t=1762190713",
       "type": "无偿",
@@ -111,8 +93,8 @@ window.COMMISSION_DATA = {
     },
     {
       "name": "花落南枝",
-      "artist": "",
-      "qq": "",
+      "artist": "Crimson_Fox",
+      "qq": "3660607411",
       "avatar": "",
       "type": "模板",
       "status": "完成",
@@ -120,8 +102,8 @@ window.COMMISSION_DATA = {
     },
     {
       "name": "花落南枝",
-      "artist": "",
-      "qq": "",
+      "artist": "Crimson_Fox",
+      "qq": "3660607411",
       "avatar": "",
       "type": "模板",
       "status": "完成",
@@ -129,8 +111,8 @@ window.COMMISSION_DATA = {
     },
     {
       "name": "烨羽墨曦（幻梦）",
-      "artist": "",
-      "qq": "",
+      "artist": "Crimson_Fox",
+      "qq": "3671811347",
       "avatar": "",
       "type": "无偿",
       "status": "完成",
@@ -138,39 +120,39 @@ window.COMMISSION_DATA = {
     },
     {
       "name": "我好俄",
-      "artist": "",
-      "qq": "",
-      "avatar": "",
+      "artist": "Crimson_Fox",
+      "qq": "1071864422",
+      "avatar": "https://thirdqq.qlogo.cn/g?b=sdk&k=3Brx1KGZBLZf9S9SFRD9icQ&kti=aaxweBHyHcE&s=640&t=1740823604",
       "type": "模板",
       "status": "未完成",
       "date": "2026-10-06"
     },
     {
       "name": "🐾蓝岳🐾",
-      "artist": "",
-      "qq": "",
+      "artist": "Crimson_Fox",
+      "qq": "2559224633",
       "avatar": "",
       "type": "模板",
       "status": "完成",
       "date": "2026-10-04"
     },
     {
-      "name": "蓝岳（meme）",
+      "name": "🐾蓝岳🐾（meme）",
       "artist": "空烬",
+      "qq": "2559224633",
+      "avatar": "https://thirdqq.qlogo.cn/g?b=sdk&k=wMlNTibicibheNplTTeCuwdLg&kti=aolcvhHyHcA&s=640&t=1787386269",
       "type": "模板",
       "status": "未完成",
-      "date": "2026-10-11",
-      "qq": "",
-      "avatar": ""
+      "date": "2026-10-11"
     },
     {
       "name": "蓝岳（小表情）",
       "artist": "空烬",
+      "qq": "2559224633",
+      "avatar": "",
       "type": "模板",
       "status": "未完成",
-      "date": "2026-10-18",
-      "qq": "",
-      "avatar": ""
+      "date": "2026-10-18"
     },
     {
       "name": "银铃🎶Silver Bell🐾",
