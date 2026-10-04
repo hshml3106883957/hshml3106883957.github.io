@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-05T01:14:00",
+  "updated": "2026-10-05T01:15:25",
   "items": [
     {
       "name": "龙龙",
@@ -101,10 +101,10 @@
       "date": "2026-10-17"
     },
     {
-      "name": "就是爱音乐",
+      "name": "赤焰狐（科技狐）",
       "artist": "",
       "qq": "782552637",
-      "avatar": "https://thirdqq.qlogo.cn/g?b=sdk&k=mTMolZW9gqTPSocCiaIsutA&s=640&t=0",
+      "avatar": "https://thirdqq.qlogo.cn/g?b=sdk&k=FTj6wkDRx5FscSXJoYlCpA&kti=aSM8iRHyHcI&s=640&t=1762190713",
       "type": "无偿",
       "status": "未完成",
       "date": "2026-10-24"
@@ -171,6 +171,15 @@
       "date": "2026-10-18",
       "qq": "",
       "avatar": ""
+    },
+    {
+      "name": "银铃🎶Silver Bell🐾",
+      "artist": "空烬",
+      "qq": "3378896151",
+      "avatar": "https://thirdqq.qlogo.cn/g?b=sdk&k=lAuEJOVIMiabvxMLDoIgicAw&kti=arPduhHyHcE&s=640&t=1790006621",
+      "type": "无偿",
+      "status": "未完成",
+      "date": "2026-10-04"
     }
   ]
 }
