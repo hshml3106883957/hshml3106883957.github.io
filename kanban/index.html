@@ -21,7 +21,6 @@
 <body>
 <div class="app">
 
-  <!-- 顶部栏 -->
   <header class="header">
     <div class="header-left">
       <img src="ico.png" alt="空焰" class="brand-logo" />
@@ -37,7 +36,7 @@
           <circle cx="11" cy="11" r="7"></circle>
           <path d="m20 20-3.5-3.5"></path>
         </svg>
-        <input id="search" type="text" placeholder="搜索名字或画师…" autocomplete="off" />
+        <input id="search" type="text" placeholder="搜索名字 / 画师 / QQ…" autocomplete="off" />
       </div>
       <button id="themeToggle" class="icon-btn" aria-label="切换主题">
         <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none"
@@ -53,7 +52,6 @@
     </div>
   </header>
 
-  <!-- 大分类 Tab：未完成 / 完成 -->
   <nav class="tab-bar" id="tabBar">
     <button class="tab-btn active" data-tab="doing">
       <span class="tab-label">未完成</span>
@@ -66,7 +64,6 @@
     <span class="tab-indicator" id="tabIndicator"></span>
   </nav>
 
-  <!-- 类型筛选 -->
   <div class="filter-bar">
     <div class="filter-group" id="typeFilter"></div>
   </div>
@@ -189,29 +186,27 @@ function buildTypeFilter() {
   });
 }
 
-/* ============ 渲染：平铺网格 ============ */
+/* ============ 渲染 ============ */
 function render() {
   const board = document.getElementById('board');
 
-  /* 大 Tab 过滤：完成 vs 非完成 */
   const inTab = DATA.items.filter(it => {
     if (state.tab === 'done') return it.status === '完成';
     return it.status !== '完成';
   });
 
-  /* 类型 + 搜索 */
   const filtered = inTab.filter(it => {
     if (state.type !== '全部' && it.type !== state.type) return false;
     if (state.q) {
       const q = state.q;
-      const name = String(it.name || '').toLowerCase();
+      const name   = String(it.name   || '').toLowerCase();
       const artist = String(it.artist || '').toLowerCase();
-      if (!name.includes(q) && !artist.includes(q)) return false;
+      const qq     = String(it.qq     || '').toLowerCase();
+      if (!name.includes(q) && !artist.includes(q) && !qq.includes(q)) return false;
     }
     return true;
   });
 
-  /* 按日期倒序 */
   filtered.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
 
   if (filtered.length === 0) {
@@ -236,13 +231,32 @@ function updateTabCounts() {
 function cardHTML(it) {
   const sc = STATUS_CLS[it.status] || 'doing';
   const tc = TYPE_CLS[it.type] || 'ord';
-  const hasDate = it.date && String(it.date).trim();
+  const hasDate   = it.date   && String(it.date).trim();
   const hasArtist = it.artist && String(it.artist).trim();
+  const hasQQ     = it.qq     && String(it.qq).trim();
+  const hasAvatar = it.avatar && String(it.avatar).trim();
+
+  /* 头像：优先用 avatar，没有就用 QQ 头像，都没有就不显示 */
+  let avatarHTML = '';
+  if (hasAvatar) {
+    avatarHTML = `<img class="card-avatar" src="${esc(it.avatar)}" alt=""
+                       referrerpolicy="no-referrer"
+                       onerror="this.replaceWith(makeQQAvatar('${esc(it.qq || '')}'))">`;
+  } else if (hasQQ) {
+    avatarHTML = `<img class="card-avatar"
+                       src="https://thirdqq.qlogo.cn/g?b=sdk&s=100&nk=${esc(it.qq)}"
+                       alt="" referrerpolicy="no-referrer"
+                       onerror="this.style.display='none'">`;
+  }
+
   return `
   <article class="card card--${sc}">
     <div class="card-top">
-      <span class="pill pill--${tc}">${esc(it.type || '—')}</span>
-      <span class="pill pill--${sc}">${esc(it.status || '—')}</span>
+      <div class="card-pills">
+        <span class="pill pill--${tc}">${esc(it.type || '—')}</span>
+        <span class="pill pill--${sc}">${esc(it.status || '—')}</span>
+      </div>
+      ${avatarHTML}
     </div>
     <h3 class="card-name">${esc(it.name || '未命名')}</h3>
     <div class="card-meta">
@@ -255,19 +269,43 @@ function cardHTML(it) {
         </svg>
         <span>${esc(it.artist)}</span>
       </span>` : ''}
+      ${hasDate ? `
       <span class="date">
         <svg class="mini-icon" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="5" width="18" height="16" rx="2"></rect>
           <path d="M3 10h18M8 3v4M16 3v4"></path>
         </svg>
-        <span>${esc(hasDate ? it.date : '待定')}</span>
-      </span>
+        <span>${esc(it.date)}</span>
+      </span>` : ''}
+      ${hasQQ ? `
+      <span class="qq" title="QQ">
+        <svg class="mini-icon" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a10 10 0 0 1 10 10c0 5.5-4.5 10-10 10S2 17.5 2 12 6.5 2 12 2z"></path>
+          <circle cx="9" cy="10" r="1"></circle>
+          <circle cx="15" cy="10" r="1"></circle>
+        </svg>
+        <span>${esc(it.qq)}</span>
+      </span>` : ''}
     </div>
   </article>`;
 }
 
 /* ============ 工具 ============ */
+function makeQQAvatar(qq) {
+  if (!qq) {
+    const span = document.createElement('span');
+    return span;
+  }
+  const img = document.createElement('img');
+  img.className = 'card-avatar';
+  img.src = `https://thirdqq.qlogo.cn/g?b=sdk&s=100&nk=${qq}`;
+  img.referrerPolicy = 'no-referrer';
+  img.onerror = () => img.style.display = 'none';
+  return img;
+}
+
 function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
