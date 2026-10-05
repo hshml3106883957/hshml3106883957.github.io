@@ -1,5 +1,5 @@
 window.COMMISSION_DATA = {
-  "updated": "2026-10-05T10:44:02",
+  "updated": "2026-10-05T14:11:58",
   "items": [
     {
       "name": "凉毅",
@@ -158,15 +158,6 @@ window.COMMISSION_DATA = {
       "name": "🐾蓝岳🐾",
       "artist": "空烬",
       "qq": "2559224633",
-      "avatar": "",
-      "type": "模板",
-      "status": "未完成",
-      "date": "2026-10-07"
-    },
-    {
-      "name": "星澄（大头）",
-      "artist": "空烬",
-      "qq": "196165757",
       "avatar": "",
       "type": "模板",
       "status": "未完成",
