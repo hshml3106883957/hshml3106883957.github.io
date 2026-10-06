@@ -1,5 +1,5 @@
 window.COMMISSION_DATA = {
-  "updated": "2026-10-05T19:49:11",
+  "updated": "2026-10-06T10:08:06",
   "items": [
     {
       "name": "凉毅",
@@ -47,9 +47,9 @@ window.COMMISSION_DATA = {
       "date": "2026-10-04"
     },
     {
-      "name": "威威Aweglare",
+      "name": "冰野iceknhgdy",
       "artist": "空烬",
-      "qq": "",
+      "qq": "3633171055",
       "avatar": "",
       "type": "模板",
       "status": "未完成",
@@ -115,7 +115,7 @@ window.COMMISSION_DATA = {
       "qq": "1071864422",
       "avatar": "https://thirdqq.qlogo.cn/g?b=sdk&k=3Brx1KGZBLZf9S9SFRD9icQ&kti=aaxweBHyHcE&s=640&t=1740823604",
       "type": "模板",
-      "status": "未完成",
+      "status": "完成",
       "date": "2026-10-06"
     },
     {
@@ -169,7 +169,7 @@ window.COMMISSION_DATA = {
       "qq": "196165757",
       "avatar": "",
       "type": "模板",
-      "status": "未完成",
+      "status": "完成",
       "date": "2026-10-07"
     },
     {
@@ -178,7 +178,7 @@ window.COMMISSION_DATA = {
       "qq": "2944934305",
       "avatar": "",
       "type": "模板",
-      "status": "未完成",
+      "status": "完成",
       "date": "2026-10-07"
     },
     {
@@ -189,6 +189,15 @@ window.COMMISSION_DATA = {
       "type": "模板",
       "status": "未完成",
       "date": "2026-10-17"
+    },
+    {
+      "name": "冷途",
+      "artist": "空烬",
+      "qq": "1795676288",
+      "avatar": "",
+      "type": "模板",
+      "status": "未完成",
+      "date": "2026-10-07"
     }
   ]
 };
